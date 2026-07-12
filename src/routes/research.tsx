@@ -9,7 +9,7 @@ export const Route = createFileRoute("/research")({
       {
         name: "description",
         content:
-          "The discovery research behind Praxys: 150 STEM students, 4 university professors, and 3 industry professionals on how AI is reshaping capability.",
+          "The discovery research behind Praxys: 150 STEM students, 10 university professors, and 3 industry professionals on how AI is reshaping capability.",
       },
       { property: "og:title", content: "Research — AutoPraxys" },
       {
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/research")({
 
 const cohort = [
   { stat: "150", label: "STEM students interviewed" },
-  { stat: "4", label: "University professors consulted" },
+  { stat: "10", label: "University professors consulted" },
   { stat: "3", label: "Industry professionals" },
 ];
 
