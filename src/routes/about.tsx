@@ -26,9 +26,10 @@ export const Route = createFileRoute("/about")({
 
 const team = [
   { initials: "SD", name: "Souryavarma Datla", role: "Founder & CEO" },
-  { initials: "AK", name: "Apoorv Khanna", role: "Backend" },
+  { initials: "HP", name: "Harshita Ponduri", role: "Frontend · Marketing" },
+  { initials: "LV", name: "Lakshmeesh Varma", role: "Backend" },
   { initials: "AN", name: "Aniket Nandy", role: "Frontend" },
-  { initials: "LV", name: "Lakshmeesh Varma", role: "UI/UX · Research" },
+  { initials: "CS", name: "Chaitanya Suryadevara", role: "UI/UX · Research" },
 ];
 
 const advisors = [
