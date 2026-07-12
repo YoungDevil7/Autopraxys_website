@@ -90,9 +90,9 @@ function Index() {
                 }}
               />
               <img
-                src="/autopraxys-logo.png"
+                src="/autopraxys-logo.png?v=5"
                 alt="AutoPraxys"
-                className="relative mx-auto w-[88%] object-contain drop-shadow-[0_18px_40px_oklch(0.55_0.04_85_/_0.12)]"
+                className="relative mx-auto w-[88%] object-contain mix-blend-multiply drop-shadow-[0_18px_40px_oklch(0.55_0.04_85_/_0.12)]"
               />
             </div>
           </Reveal>
