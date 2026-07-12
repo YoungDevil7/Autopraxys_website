@@ -80,11 +80,19 @@ function Index() {
             </Reveal>
           </div>
           <Reveal delay={200} className="relative flex justify-center md:justify-end">
-            <div className="animate-float w-full max-w-md">
+            <div className="animate-float relative w-full max-w-[26rem]">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-3xl"
+                style={{
+                  background:
+                    "radial-gradient(circle, oklch(0.94 0.03 85 / 0.85) 0%, transparent 68%)",
+                }}
+              />
               <img
                 src="/autopraxys-logo.png"
                 alt="AutoPraxys"
-                className="w-full object-contain"
+                className="relative mx-auto w-[88%] object-contain drop-shadow-[0_18px_40px_oklch(0.55_0.04_85_/_0.12)]"
               />
             </div>
           </Reveal>
