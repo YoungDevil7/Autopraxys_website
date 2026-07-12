@@ -25,7 +25,7 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
-const CONTACT_INBOX = "souryav.info@gmail.com";
+const CONTACT_INBOX = "sourya@autopraxys.com";
 
 const field =
   "w-full rounded-xl border border-border bg-card/70 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30";

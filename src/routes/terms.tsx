@@ -59,7 +59,7 @@ function TermsPage() {
       <LegalSection heading="Contact">
         <p>
           Questions about these terms can be sent to AutoPraxys Private Limited at
-          souryav.info@gmail.com.
+          sourya@autopraxys.com.
         </p>
       </LegalSection>
     </LegalLayout>
