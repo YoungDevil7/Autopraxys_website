@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        title: "AutoPraxys — The AI Capability Intelligence Platform",
+        title: "AutoPraxys | Behavioral Intelligence for Human-AI Collaboration",
       },
       {
         name: "description",
@@ -88,7 +88,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "AutoPraxys builds Praxys, the world's first AI Capability Intelligence Platform — measuring not what AI produces, but how humans grow with it.",
       },
       { name: "author", content: "AutoPraxys Private Limited" },
-      { property: "og:title", content: "AutoPraxys — AI Capability Intelligence" },
+      {
+        property: "og:title",
+        content: "AutoPraxys | Behavioral Intelligence for Human-AI Collaboration",
+      },
       {
         property: "og:description",
         content:
@@ -100,7 +103,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/autopraxys-logo.png?v=2", type: "image/png" },
+      { rel: "shortcut icon", href: "/favicon.ico?v=2" },
+      { rel: "apple-touch-icon", href: "/autopraxys-logo.png?v=2" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
