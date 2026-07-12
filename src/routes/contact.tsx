@@ -25,7 +25,7 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
-const CONTACT_INBOX = "souryav.inf0@gmail.com";
+const CONTACT_INBOX = "souryav.inmfo@gmail.com";
 
 const field =
   "w-full rounded-xl border border-border bg-card/70 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30";
@@ -42,6 +42,23 @@ function ContactPage() {
 
     const form = e.currentTarget;
     const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const organization = String(data.get("org") ?? "");
+    const interest = String(data.get("interest") ?? "");
+    const message = String(data.get("message") ?? "");
+
+    const payload = {
+      name,
+      email,
+      organization,
+      interest,
+      message,
+      _subject: "New AutoPraxys contact request",
+      _template: "table",
+      _captcha: "false",
+      _replyto: email,
+    };
 
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_INBOX}`, {
@@ -50,16 +67,7 @@ function ContactPage() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          organization: data.get("org"),
-          interest: data.get("interest"),
-          message: data.get("message"),
-          _subject: "New AutoPraxys contact request",
-          _template: "table",
-          _captcha: "false",
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -68,9 +76,20 @@ function ContactPage() {
 
       setSent(true);
     } catch {
-      setError(
-        "Couldn't send your request. Please try again or email us directly at hello@autopraxys.com.",
+      // Fallback: open the user's mail app so the request still goes through
+      const subject = encodeURIComponent("New AutoPraxys contact request");
+      const body = encodeURIComponent(
+        [
+          `Name: ${name}`,
+          `Email: ${email}`,
+          `Organization: ${organization}`,
+          `Interest: ${interest}`,
+          "",
+          message,
+        ].join("\n"),
       );
+      window.location.href = `mailto:${CONTACT_INBOX}?subject=${subject}&body=${body}`;
+      setSent(true);
     } finally {
       setSending(false);
     }
@@ -104,10 +123,10 @@ function ContactPage() {
                   Email
                 </p>
                 <a
-                  href="mailto:hello@autopraxys.com"
+                  href={`mailto:${CONTACT_INBOX}`}
                   className="mt-1 block text-lg font-medium text-primary hover:underline"
                 >
-                  hello@autopraxys.com
+                  {CONTACT_INBOX}
                 </a>
               </div>
               <div>

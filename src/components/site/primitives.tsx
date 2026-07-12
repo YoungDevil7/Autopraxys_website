@@ -54,6 +54,15 @@ export function CTA({ children, to, href, variant = "primary", className }: CTAP
   const style =
     variant === "primary" ? { backgroundImage: "var(--gradient-blue)" } : undefined;
 
+  // Prefer a real <a href> for contact so navigation works even if client routing fails
+  if (href || to === "/contact") {
+    return (
+      <a href={href ?? to} className={cn(base, styles, className)} style={style}>
+        {children}
+      </a>
+    );
+  }
+
   if (to) {
     return (
       <Link to={to} className={cn(base, styles, className)} style={style}>
@@ -61,6 +70,7 @@ export function CTA({ children, to, href, variant = "primary", className }: CTAP
       </Link>
     );
   }
+
   return (
     <a href={href} className={cn(base, styles, className)} style={style}>
       {children}

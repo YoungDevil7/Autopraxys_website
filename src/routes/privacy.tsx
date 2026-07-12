@@ -60,7 +60,7 @@ function PrivacyPage() {
       <LegalSection heading="Contact">
         <p>
           Questions about privacy can be sent to AutoPraxys Private Limited at
-          hello@autopraxys.com.
+          souryav.inmfo@gmail.com.
         </p>
       </LegalSection>
     </LegalLayout>
