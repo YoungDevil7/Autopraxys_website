@@ -29,6 +29,7 @@ const team = [
   { initials: "CS", name: "Chaitanya Suryadevara", role: "CFO" },
   { initials: "HP", name: "Harshita Ponduri", role: "Frontend · Marketing" },
   { initials: "LV", name: "Lakshmeesh Varma", role: "Backend" },
+  { initials: "AK", name: "Apoorv Khanna", role: "Backend" },
   { initials: "AN", name: "Aniket Nandy", role: "Frontend · UI/UX" },
 ];
 
