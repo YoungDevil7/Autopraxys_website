@@ -31,6 +31,7 @@ const team = [
   { initials: "AK", name: "Apoorv Khanna", role: "Backend" },
   { initials: "LV", name: "Lakshmeesh Varma", role: "Backend" },
   { initials: "AN", name: "Aniket Nandy", role: "Frontend · UI/UX" },
+  { initials: "RV", name: "Raj Vardhan", role: "Social Media" },
 ];
 
 const advisors = [
