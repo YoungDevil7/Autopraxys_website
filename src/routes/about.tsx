@@ -28,7 +28,7 @@ const team = [
   { initials: "SD", name: "Souryavarma Datla", role: "Founder & CEO" },
   { initials: "CS", name: "Chaitanya Suryadevara", role: "CFO" },
   { initials: "HP", name: "Harshita Ponduri", role: "Frontend · Marketing" },
-  { initials: "AK", name: "Apoorv Khanna", role: "Backend" },
+  { initials: "PR", name: "Pakalapati V Seetha Rama Raju", role: "Backend" },
   { initials: "LV", name: "Lakshmeesh Varma", role: "Backend" },
   { initials: "AN", name: "Aniket Nandy", role: "Frontend · UI/UX" },
   { initials: "RV", name: "Raj Vardhan", role: "Social Media" },
