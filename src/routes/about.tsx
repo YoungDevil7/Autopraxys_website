@@ -104,12 +104,11 @@ function AboutPage() {
         <Container className="grid gap-12 md:grid-cols-[1fr_1.4fr]">
           <Reveal>
             <div>
-              <div
-                className="flex h-24 w-24 items-center justify-center rounded-2xl font-display text-3xl font-semibold text-primary-foreground"
-                style={{ backgroundImage: "var(--gradient-blue)" }}
-              >
-                SD
-              </div>
+              <img
+                src="/souryavarma-datla.png"
+                alt="Souryavarma Datla"
+                className="h-24 w-24 rounded-2xl object-cover object-top shadow-sm"
+              />
               <h2 className="mt-6 font-display text-2xl font-semibold text-ink">
                 Souryavarma Datla
               </h2>
