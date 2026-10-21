@@ -7,58 +7,68 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — AutoPraxys" },
+      { title: "Join Waitlist — AutoPraxys" },
       {
         name: "description",
         content:
-          "Request a Praxys demo or start a capability intelligence pilot with AutoPraxys Private Limited.",
+          "Join the waitlist for the Praxys human–AI behavioral intelligence platform. Inquire about enterprise and university pilot cohorts.",
       },
-      { property: "og:title", content: "Contact — AutoPraxys" },
+      { property: "og:title", content: "Join Waitlist — AutoPraxys" },
       {
         property: "og:description",
-        content: "Request a demo or start a pilot with AutoPraxys.",
+        content:
+          "Join the waitlist for Praxys Assurance, Collaboration, and Capability pilot cohorts.",
       },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: "https://autopraxys.com/contact" },
+      { property: "og:image", content: "https://autopraxys.com/autopraxys-logo.png" },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://autopraxys.com/contact" }],
   }),
-  component: ContactPage,
+  component: ContactWaitlistPage,
 });
 
 const CONTACT_INBOX = "sourya@autopraxys.com";
 
-const field =
-  "w-full rounded-xl border border-border bg-card/70 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30";
+const inputStyles =
+  "w-full rounded-xl border border-border bg-card/80 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30";
 
-function ContactPage() {
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+function ContactWaitlistPage() {
+  const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [lastSubmission, setLastSubmission] = useState<{
+    name: string;
+    email: string;
+    organization: string;
+    interest: string;
+    message: string;
+  } | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSending(true);
-    setError(null);
+    setFormState("submitting");
+    setErrorMessage(null);
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const name = String(data.get("name") ?? "");
-    const email = String(data.get("email") ?? "");
-    const organization = String(data.get("org") ?? "");
-    const interest = String(data.get("interest") ?? "");
-    const message = String(data.get("message") ?? "");
+    const name = String(data.get("name") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const organization = String(data.get("organization") ?? "").trim();
+    const interest = String(data.get("interest") ?? "").trim();
+    const message = String(data.get("message") ?? "").trim();
 
     const payload = {
       name,
       email,
-      organization,
+      organization: organization || "Not specified",
       interest,
-      message,
-      _subject: "New AutoPraxys contact request",
+      message: message || "No additional note provided",
+      _subject: `New AutoPraxys Waitlist Request: ${name} (${organization || "Independent"})`,
       _template: "table",
       _captcha: "false",
       _replyto: email,
     };
+
+    setLastSubmission({ name, email, organization, interest, message });
 
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_INBOX}`, {
@@ -71,184 +81,283 @@ function ContactPage() {
       });
 
       if (!res.ok) {
-        throw new Error("Request failed");
+        throw new Error(`Submission relay returned status ${res.status}`);
       }
 
-      setSent(true);
-    } catch {
-      // Fallback: open the user's mail app so the request still goes through
-      const subject = encodeURIComponent("New AutoPraxys contact request");
-      const body = encodeURIComponent(
-        [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          `Organization: ${organization}`,
-          `Interest: ${interest}`,
-          "",
-          message,
-        ].join("\n"),
+      const json = await res.json();
+      if (json.success === "false" || json.error) {
+        throw new Error(json.message || "Relay service rejected payload");
+      }
+
+      setFormState("success");
+    } catch (err: unknown) {
+      console.warn("Automated form delivery failed:", err);
+      // Truthful error state: Do not pretend submission succeeded
+      setFormState("error");
+      setErrorMessage(
+        "Automated network delivery was blocked by your browser privacy settings or network firewall.",
       );
-      window.location.href = `mailto:${CONTACT_INBOX}?subject=${subject}&body=${body}`;
-      setSent(true);
-    } finally {
-      setSending(false);
     }
   }
 
+  const directMailtoUrl = lastSubmission
+    ? `mailto:${CONTACT_INBOX}?subject=${encodeURIComponent(
+        `AutoPraxys Waitlist Inquiry: ${lastSubmission.name}`,
+      )}&body=${encodeURIComponent(
+        [
+          `Name: ${lastSubmission.name}`,
+          `Work Email: ${lastSubmission.email}`,
+          `Organization: ${lastSubmission.organization}`,
+          `Interest: ${lastSubmission.interest}`,
+          "",
+          `Notes: ${lastSubmission.message}`,
+        ].join("\n"),
+      )}`
+    : `mailto:${CONTACT_INBOX}?subject=${encodeURIComponent("AutoPraxys Waitlist Inquiry")}`;
+
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden py-20 md:py-28"
       style={{ backgroundImage: "var(--gradient-hero)" }}
     >
-      <Container className="grid gap-16 md:grid-cols-2">
+      <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
+        {/* Left Column: Context & Direct Contact */}
         <div>
           <Reveal>
-            <Eyebrow>Contact</Eyebrow>
+            <Eyebrow>Join the Waitlist</Eyebrow>
           </Reveal>
-          <Reveal delay={80}>
-            <h1 className="mt-6 text-5xl font-semibold leading-[1.05] text-ink md:text-6xl text-balance">
-              Let's build the capability standard.
+          <Reveal delay={60}>
+            <h1 className="mt-5 text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl text-balance">
+              Partner with us on behavioral intelligence.
             </h1>
           </Reveal>
-          <Reveal delay={160}>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
-              Request a Praxys demo, or explore a capability intelligence pilot for
-              your institution or organization. We read every message.
+          <Reveal delay={120}>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              We are accepting pilot applications for enterprise teams, university cohorts, and
+              research labs. Tell us about your environment and which product experience you are
+              looking to evaluate.
             </p>
           </Reveal>
-          <Reveal delay={220}>
+
+          <Reveal delay={180}>
             <div className="mt-10 space-y-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  Email
-                </p>
+              <div className="rounded-2xl border border-border/80 bg-card/60 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Direct Inquiries & Security Review
+                </span>
                 <a
                   href={`mailto:${CONTACT_INBOX}`}
-                  className="mt-1 block text-lg font-medium text-primary hover:underline"
+                  className="mt-1 block text-base font-semibold text-primary hover:underline"
                 >
                   {CONTACT_INBOX}
                 </a>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  Phone
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Monitored directly by the founding team. Typical response time within 24 hours.
                 </p>
-                <a
-                  href="tel:+919441063377"
-                  className="mt-1 block text-lg font-medium text-primary hover:underline"
-                >
-                  9441063377
-                </a>
               </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  LinkedIn
-                </p>
+
+              <div className="rounded-2xl border border-border/80 bg-card/60 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Company Identity
+                </span>
+                <p className="mt-1 text-sm font-semibold text-ink">AutoPraxys Private Limited</p>
                 <a
-                  href="https://www.linkedin.com/company/autopraxys-private-limited/?viewAsMember=true"
+                  href="https://www.linkedin.com/company/autopraxys-private-limited/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 block text-lg font-medium text-primary hover:underline"
+                  className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                 >
-                  AutoPraxys on LinkedIn
+                  <span>AutoPraxys on LinkedIn</span>
+                  <span aria-hidden="true">↗</span>
                 </a>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  Company
-                </p>
-                <p className="mt-1 text-lg font-medium text-ink">
-                  AutoPraxys Private Limited
-                </p>
               </div>
             </div>
           </Reveal>
         </div>
 
-        <Reveal delay={120}>
-          <div className="rounded-3xl border border-border/70 bg-card/80 p-8 shadow-[var(--shadow-soft)] backdrop-blur-sm">
-            {sent ? (
-              <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
+        {/* Right Column: Waitlist Application Form */}
+        <Reveal delay={100}>
+          <div className="rounded-3xl border border-border/80 bg-card p-7 md:p-9 shadow-[var(--shadow-soft)]">
+            {formState === "success" ? (
+              <div className="flex min-h-[380px] flex-col items-center justify-center text-center">
                 <div
-                  className="flex h-16 w-16 items-center justify-center rounded-full text-2xl text-primary-foreground"
+                  className="flex h-14 w-14 items-center justify-center rounded-full text-2xl text-primary-foreground font-bold shadow-xs"
                   style={{ backgroundImage: "var(--gradient-teal)" }}
+                  aria-hidden="true"
                 >
                   ✓
                 </div>
-                <h2 className="mt-6 font-display text-2xl font-semibold text-ink">
-                  Thank you.
+                <h2 className="mt-5 font-display text-2xl font-semibold text-ink">
+                  Application Received
                 </h2>
-                <p className="mt-3 max-w-xs text-muted-foreground">
-                  Your request has been noted. The AutoPraxys team will be in touch
-                  shortly.
+                <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+                  Thank you for your interest in AutoPraxys. Our team will review your
+                  organization's context and reach out with pilot timeline details.
                 </p>
+                <div className="mt-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormState("idle");
+                      setLastSubmission(null);
+                    }}
+                    className="text-xs font-semibold text-primary hover:underline"
+                  >
+                    Submit another inquiry
+                  </button>
+                </div>
+              </div>
+            ) : formState === "error" ? (
+              <div className="space-y-5">
+                <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5">
+                  <h3 className="font-display text-lg font-semibold text-ink">Delivery Notice</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {errorMessage}
+                  </p>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    We do not silently drop failed submissions. You can send your prefilled details
+                    directly using your default email client:
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <a
+                      href={directMailtoUrl}
+                      className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90"
+                      style={{ backgroundImage: "var(--gradient-blue)" }}
+                    >
+                      Send via Email Application
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setFormState("idle")}
+                      className="inline-flex items-center justify-center rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-foreground hover:bg-accent"
+                    >
+                      Back to Form
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
-              <form className="space-y-5" onSubmit={handleSubmit}>
-                <div className="grid gap-5 sm:grid-cols-2">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="name" className="mb-2 block text-sm font-medium text-ink">
-                      Name
+                    <label
+                      htmlFor="name"
+                      className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                    >
+                      Full Name <span className="text-red-500">*</span>
                     </label>
-                    <input id="name" name="name" required className={field} placeholder="Your name" />
+                    <input
+                      id="name"
+                      name="name"
+                      required
+                      className={inputStyles}
+                      placeholder="Jane Doe"
+                    />
                   </div>
                   <div>
-                    <label htmlFor="email" className="mb-2 block text-sm font-medium text-ink">
-                      Email
+                    <label
+                      htmlFor="email"
+                      className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                    >
+                      Work / Academic Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
-                      className={field}
-                      placeholder="you@organization.com"
+                      className={inputStyles}
+                      placeholder="jane@organization.com"
                     />
                   </div>
                 </div>
+
                 <div>
-                  <label htmlFor="org" className="mb-2 block text-sm font-medium text-ink">
-                    Organization
+                  <label
+                    htmlFor="organization"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  >
+                    Organization / University{" "}
+                    <span className="text-xs font-normal lowercase text-muted-foreground/80">
+                      (optional)
+                    </span>
                   </label>
-                  <input id="org" name="org" className={field} placeholder="University or company" />
+                  <input
+                    id="organization"
+                    name="organization"
+                    className={inputStyles}
+                    placeholder="Company or university department"
+                  />
                 </div>
+
                 <div>
-                  <label htmlFor="interest" className="mb-2 block text-sm font-medium text-ink">
-                    I'm interested in
+                  <label
+                    htmlFor="interest"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  >
+                    Product Interest <span className="text-red-500">*</span>
                   </label>
-                  <select id="interest" name="interest" className={cn(field, "appearance-none")}>
-                    <option>Requesting a demo</option>
-                    <option>A university pilot</option>
-                    <option>An enterprise pilot</option>
-                    <option>Research collaboration</option>
-                    <option>Something else</option>
+                  <select
+                    id="interest"
+                    name="interest"
+                    required
+                    className={cn(inputStyles, "bg-card cursor-pointer")}
+                  >
+                    <option value="Praxys Platform (All Three)">
+                      Praxys Platform (All Three Products)
+                    </option>
+                    <option value="Praxys Assurance (AI Risk & Governance)">
+                      Praxys Assurance (AI Risk & Policy Protection)
+                    </option>
+                    <option value="Praxys Collaboration (Workflow Friction)">
+                      Praxys Collaboration (Interaction Friction & Cadence)
+                    </option>
+                    <option value="Praxys Capability (Learning & Autonomy)">
+                      Praxys Capability (Learning & Cognitive Sustainability)
+                    </option>
+                    <option value="Academic Research Study">
+                      Academic / Research Cohort Study
+                    </option>
                   </select>
                 </div>
+
                 <div>
-                  <label htmlFor="message" className="mb-2 block text-sm font-medium text-ink">
-                    Message
+                  <label
+                    htmlFor="message"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                  >
+                    Context / Note{" "}
+                    <span className="text-xs font-normal lowercase text-muted-foreground/80">
+                      (optional)
+                    </span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    rows={4}
-                    className={cn(field, "resize-none")}
-                    placeholder="Tell us a little about your context."
+                    rows={3}
+                    className={cn(inputStyles, "resize-none")}
+                    placeholder="Estimated cohort size, target tools (ChatGPT, Claude, IDE), or primary objectives."
                   />
                 </div>
-                {error && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {error}
-                  </p>
-                )}
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className="w-full rounded-full px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] disabled:pointer-events-none disabled:opacity-70"
-                  style={{ backgroundImage: "var(--gradient-blue)" }}
-                >
-                  {sending ? "Sending…" : "Send request"}
-                </button>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={formState === "submitting"}
+                    className="w-full rounded-full py-3.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] disabled:opacity-60 disabled:pointer-events-none"
+                    style={{ backgroundImage: "var(--gradient-blue)" }}
+                  >
+                    {formState === "submitting" ? "Submitting application…" : "Join waitlist"}
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-center text-muted-foreground">
+                  By submitting, you agree to our{" "}
+                  <a href="/privacy" className="underline hover:text-foreground">
+                    Privacy Policy
+                  </a>
+                  . We do not share lead details with third-party data brokers.
+                </p>
               </form>
             )}
           </div>

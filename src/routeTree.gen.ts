@@ -16,6 +16,7 @@ import { Route as ResearchRouteImport } from './routes/research'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PraxysRouteImport } from './routes/praxys'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BusinessValueRouteImport } from './routes/business-value'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -54,6 +55,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BusinessValueRoute = BusinessValueRouteImport.update({
+  id: '/business-value',
+  path: '/business-value',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -68,6 +74,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/business-value': typeof BusinessValueRoute
   '/contact': typeof ContactRoute
   '/praxys': typeof PraxysRoute
   '/privacy': typeof PrivacyRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/business-value': typeof BusinessValueRoute
   '/contact': typeof ContactRoute
   '/praxys': typeof PraxysRoute
   '/privacy': typeof PrivacyRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/business-value': typeof BusinessValueRoute
   '/contact': typeof ContactRoute
   '/praxys': typeof PraxysRoute
   '/privacy': typeof PrivacyRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/business-value'
     | '/contact'
     | '/praxys'
     | '/privacy'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/business-value'
     | '/contact'
     | '/praxys'
     | '/privacy'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/business-value'
     | '/contact'
     | '/praxys'
     | '/privacy'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BusinessValueRoute: typeof BusinessValueRoute
   ContactRoute: typeof ContactRoute
   PraxysRoute: typeof PraxysRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/business-value': {
+      id: '/business-value'
+      path: '/business-value'
+      fullPath: '/business-value'
+      preLoaderRoute: typeof BusinessValueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BusinessValueRoute: BusinessValueRoute,
   ContactRoute: ContactRoute,
   PraxysRoute: PraxysRoute,
   PrivacyRoute: PrivacyRoute,

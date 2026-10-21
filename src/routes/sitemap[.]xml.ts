@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "";
+const BASE_URL = "https://autopraxys.com";
 
 interface SitemapEntry {
   path: string;
@@ -15,11 +15,12 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
+          { path: "/praxys", changefreq: "weekly", priority: "0.9" },
           { path: "/technology", changefreq: "monthly", priority: "0.8" },
-          { path: "/praxys", changefreq: "monthly", priority: "0.9" },
           { path: "/research", changefreq: "monthly", priority: "0.8" },
           { path: "/about", changefreq: "monthly", priority: "0.7" },
-          { path: "/contact", changefreq: "yearly", priority: "0.6" },
+          { path: "/business-value", changefreq: "monthly", priority: "0.8" },
+          { path: "/contact", changefreq: "monthly", priority: "0.8" },
           { path: "/privacy", changefreq: "yearly", priority: "0.3" },
           { path: "/terms", changefreq: "yearly", priority: "0.3" },
         ];
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls = entries.map((e) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${BASE_URL}${e.path === "/" ? "" : e.path}</loc>`,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
@@ -45,7 +46,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         return new Response(xml, {
           headers: {
-            "Content-Type": "application/xml",
+            "Content-Type": "application/xml; charset=utf-8",
             "Cache-Control": "public, max-age=3600",
           },
         });
