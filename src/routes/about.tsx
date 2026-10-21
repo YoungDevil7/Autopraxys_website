@@ -34,6 +34,13 @@ const teamMembers = [
     image: "/souryavarma-datla.png",
   },
   {
+    name: "Chaitanya Suryadevara",
+    role: "CFO",
+    focus: "Financial planning, company operations, and institutional reporting.",
+    initials: "CS",
+    image: null,
+  },
+  {
     name: "Lahari Bandaru",
     role: "GTM Lead",
     focus: "Institutional partnerships, pilot cohort onboarding, and market strategy.",
